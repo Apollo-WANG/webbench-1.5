@@ -11,7 +11,7 @@
 #define METHOD_HEAD 1
 #define METHOD_OPTIONS 2
 #define METHOD_TRACE 3
-#define PROGRAM_VERSION "1.5"
+#define PROGRAM_VERSION "1.5"           // 版本号
 #define REQUEST_SIZE 2048
 
 volatile int timerexpired = 0;		// 记录测试时间是否已经达到了设定的时间，0表示否，1表示已达到
@@ -31,21 +31,21 @@ char host[MAXHOSTNAMELEN];
 char request[REQUEST_SIZE];		// request内容
 
 static const struct option long_options[] = {
-    {"force", no_argument, &force, 1},
-    {"reload", no_argument, &force_reload, 1},
-    {"time", required_argument, NULL, 't'},
-    {"help", no_argument, NULL, '?'},
-    {"http09", no_argument, NULL, '9'},
-    {"http10", no_argument, NULL, '1'},
-    {"http11", no_argument, NULL, '2'},
-    {"get", no_argument, &method, METHOD_GET},
-    {"head", no_argument, &method, METHOD_HEAD},
-    {"options", no_argument, &method, METHOD_OPTIONS},
-    {"trace", no_argument, &method, METHOD_TRACE},
-    {"version", no_argument, NULL, 'V'},
-    {"proxy", required_argument,NULL, 'p'},
-    {"clients", required_argument, NULL, 'c'},
-    {NULL, 0, NULL, 0}
+    {"force",   no_argument,        &force,          1},
+    {"reload",  no_argument,        &force_reload,   1},
+    {"time",    required_argument,  NULL,            't'},
+    {"help",    no_argument,        NULL,            '?'},
+    {"http09",  no_argument,        NULL,            '9'},
+    {"http10",  no_argument,        NULL,            '1'},
+    {"http11",  no_argument,        NULL,            '2'},
+    {"get",     no_argument,        &method,         METHOD_GET},
+    {"head",    no_argument,        &method,         METHOD_HEAD},
+    {"options", no_argument,        &method,         METHOD_OPTIONS},
+    {"trace",   no_argument,        &method,         METHOD_TRACE},
+    {"version", no_argument,        NULL,            'V'},
+    {"proxy",   required_argument,  NULL,            'p'},
+    {"clients", required_argument,  NULL,            'c'},
+    {NULL,      0,                  NULL,             0}
 };
 
 static void benchcore(const char* host,const int port, const char *request);
@@ -77,74 +77,82 @@ static void usage(void)
 	"  -V|--version             Display program version.\n"
 	);
 };
-int main(int argc, char *argv[])
-{
- int opt=0;
- int options_index=0;
- char *tmp=NULL;
 
- if(argc==1)
- {
-	  usage();
-          return 2;
- } 
+int main(int argc, char *argv[]) {
+    int opt = 0;
+    int options_index = 0;
+    char *tmp = NULL;
 
- while((opt=getopt_long(argc,argv,"912Vfrt:p:c:?h",long_options,&options_index))!=EOF )
- {
-  switch(opt)
-  {
-   case  0 : break;
-   case 'f': force=1;break;
-   case 'r': force_reload=1;break; 
-   case '9': http10=0;break;
-   case '1': http10=1;break;
-   case '2': http10=2;break;
-   case 'V': printf(PROGRAM_VERSION"\n");exit(0);
-   case 't': benchtime=atoi(optarg);break;	     
-   case 'p': 
-	     /* proxy server parsing server:port */
-	     tmp=strrchr(optarg,':');
-	     proxyhost=optarg;
-	     if(tmp==NULL)
-	     {
-		     break;
-	     }
-	     if(tmp==optarg)
-	     {
-		     fprintf(stderr,"Error in option --proxy %s: Missing hostname.\n",optarg);
-		     return 2;
-	     }
-	     if(tmp==optarg+strlen(optarg)-1)
-	     {
-		     fprintf(stderr,"Error in option --proxy %s Port number is missing.\n",optarg);
-		     return 2;
-	     }
-	     *tmp='\0';
-	     proxyport=atoi(tmp+1);break;
-   case ':':
-   case 'h':
-   case '?': usage();return 2;break;
-   case 'c': clients=atoi(optarg);break;
-  }
- }
+    if(argc == 1) {
+        usage();
+        return 2;
+    } 
+
+    while((opt = getopt_long(argc, argv, "912Vfrt:p:c:?h", long_options, &options_index)) != EOF) {
+        switch(opt) {
+            case  0 :
+	        break;
+            case 'f': 
+                force = 1;                 
+                break;
+            case 'r': 
+                force_reload = 1;
+                break; 
+            case '9': 
+                http10 = 0;
+                break;
+            case '1': 
+                http10 = 1;
+                break;
+            case '2': 
+                http10 = 2;
+                break;
+            case 'V':
+                printf(PROGRAM_VERSION"\n");
+                exit(0);
+            case 't': 
+                benchtime = atoi(optarg);
+                break;	     
+            case 'p': 
+	        tmp = strrchr(optarg, ':');
+	        proxyhost = optarg;
+	        if(tmp == NULL)           break;
+	        if(tmp == optarg) {
+	            fprintf(stderr,"Error in option --proxy %s: Missing hostname.\n",optarg);
+		    return 2;
+	        }
+	        if(tmp == optarg + strlen(optarg) - 1) {
+	            fprintf(stderr,"Error in option --proxy %s Port number is missing.\n",optarg);
+		    return 2;
+	        }
+	        *tmp='\0';
+	        proxyport=atoi(tmp+1);
+                break;
+            case ':':
+            case 'h':
+            case '?': 
+                usage();
+                return 2;
+                break;
+            case 'c': 
+                clients = atoi(optarg);
+                break;
+        }
+    }
  
- if(optind==argc) {
-                      fprintf(stderr,"webbench: Missing URL!\n");
-		      usage();
-		      return 2;
-                    }
+    if(optind == argc) {
+        fprintf(stderr,"webbench: Missing URL!\n");
+        usage();
+        return 2;
+    }
 
- if(clients==0) clients=1;
- if(benchtime==0) benchtime=60;
- /* Copyright */
- fprintf(stderr,"Webbench - Simple Web Benchmark "PROGRAM_VERSION"\n"
-	 "Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.\n"
-	 );
- build_request(argv[optind]);
- /* print bench info */
- printf("\nBenchmarking: ");
- switch(method)
- {
+    if(clients == 0) clients = 1;
+    if(benchtime == 0) benchtime = 60;
+    fprintf(stderr,"Webbench - Simple Web Benchmark "PROGRAM_VERSION"\n"
+	        "Copyright (c) Radim Kolar 1997-2004, GPL Open Source Software.\n");
+    build_request(argv[optind]);
+    printf("\nBenchmarking: ");
+    switch(method){
 	 case METHOD_GET:
 	 default:
 		 printf("GET");break;
@@ -154,68 +162,77 @@ int main(int argc, char *argv[])
 		 printf("HEAD");break;
 	 case METHOD_TRACE:
 		 printf("TRACE");break;
- }
- printf(" %s",argv[optind]);
- switch(http10)
- {
-	 case 0: printf(" (using HTTP/0.9)");break;
-	 case 2: printf(" (using HTTP/1.1)");break;
- }
- printf("\n");
- if(clients==1) printf("1 client");
- else
-   printf("%d clients",clients);
+    }
+    printf(" %s",argv[optind]);
+    switch(http10){
+        case 0: 
+            printf(" (using HTTP/0.9)");
+            break;
+	case 2: 
+            printf(" (using HTTP/1.1)");
+            break;
+    }
+    printf("\n");
+    if(clients == 1)     printf("1 client");
+    else                 printf("%d clients",clients);
 
- printf(", running %d sec", benchtime);
- if(force) printf(", early socket close");
- if(proxyhost!=NULL) printf(", via proxy server %s:%d",proxyhost,proxyport);
- if(force_reload) printf(", forcing reload");
- printf(".\n");
- return bench();
+    printf(", running %d sec", benchtime);
+    if(force)                      printf(", early socket close");
+    if(proxyhost != NULL)          printf(", via proxy server %s:%d",proxyhost,proxyport);
+    if(force_reload)               printf(", forcing reload");
+    printf(".\n");
+    return bench();
 }
 
-void build_request(const char *url) {
+void build_request(const char *url) {								// 将请求信息存入request[REQUEST_SIZE]
     char tmp[10];
     int i;
 
-    bzero(host, MAXHOSTNAMELEN);
+    bzero(host, MAXHOSTNAMELEN);								// 清空操作
     bzero(request, REQUEST_SIZE);
 
-    if(force_reload && proxyhost != NULL && http10 < 1)             http10 = 1;
-    if(method == METHOD_HEAD && http10 < 1)                         http10 = 1;
-    if(method == METHOD_OPTIONS && http10 < 2)                      http10 = 2;
+    if(force_reload && proxyhost != NULL && http10 < 1)             http10 = 1;			// 缓存机制是HTTP1.0提供的
+    if(method == METHOD_HEAD && http10 < 1)                         http10 = 1;			// HEAD是HTTP1.0提供的
+    if(method == METHOD_OPTIONS && http10 < 2)                      http10 = 2;			// OPTION、TRACE是HTTP 1.1 提供的
     if(method == METHOD_TRACE && http10 < 2)                        http10 = 2;
 
     switch(method){
         default:
-	case METHOD_GET: strcpy(request,"GET"); break;
-	case METHOD_HEAD: strcpy(request,"HEAD"); break;
-	case METHOD_OPTIONS: strcpy(request,"OPTIONS"); break;
-	case METHOD_TRACE: strcpy(request,"TRACE"); break;
+	case METHOD_GET: 
+	    strcpy(request, "GET"); 
+            break;
+	case METHOD_HEAD: 
+            strcpy(request, "HEAD"); 
+            break;
+	case METHOD_OPTIONS: 
+            strcpy(request, "OPTIONS"); 
+            break;
+	case METHOD_TRACE: 
+            strcpy(request, "TRACE"); 
+            break;
     }
 		  
-    strcat(request," ");
+    strcat(request, " ");
 
-    if(NULL == strstr(url, "://")){
-    	fprintf(stderr, "\n%s: is not a valid URL.\n",url);
+    if(NULL == strstr(url, "://")){						// 判断url是否有://
+    	fprintf(stderr, "\n%s: is not a valid URL.\n", url);
 	exit(2);
     }
 
-    if(strlen(url) > 1500){
+    if(strlen(url) > 1500){							// 判断url是否过长
          fprintf(stderr,"URL is too long.\n");
 	 exit(2);
     }
 
-    if(proxyhost == NULL){
-        if (0 != strncasecmp("http://", url, 7)) { 
+    if(proxyhost == NULL){							
+        if (0 != strncasecmp("http://", url, 7)) { 				// 比较http://和url的前7个字符
             fprintf(stderr,"\nOnly HTTP protocol is directly supported, set --proxy for others.\n");
             exit(2);
         }
     } 
 
-    i = strstr(url, "://") - url + 3;
-
-    if(strchr(url+i,'/') == NULL) {
+    i = strstr(url, "://") - url + 3;						// 判断hostname里面有没有/
+    if(strchr(url + i, '/') == NULL) {						
         fprintf(stderr,"\nInvalid URL syntax - hostname don't ends with '/'.\n");
         exit(2);
      }
