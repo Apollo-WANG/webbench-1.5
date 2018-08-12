@@ -1,0 +1,35 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+METHOD_GET	webbench.c	10;"	d	file:
+METHOD_HEAD	webbench.c	11;"	d	file:
+METHOD_OPTIONS	webbench.c	12;"	d	file:
+METHOD_TRACE	webbench.c	13;"	d	file:
+PROGRAM_VERSION	webbench.c	14;"	d	file:
+REQUEST_SIZE	webbench.c	15;"	d	file:
+Socket	socket.c	/^int Socket(const char *host, int clientPort)$/;"	f
+alarm_handler	webbench.c	/^static void alarm_handler(int signal)$/;"	f	file:
+bench	webbench.c	/^static int bench(void){$/;"	f	file:
+benchcore	webbench.c	/^void benchcore(const char *host,const int port,const char *req){$/;"	f
+benchtime	webbench.c	/^int benchtime = 30;			\/\/ 测压时间，默认30s$/;"	v
+build_request	webbench.c	/^void build_request(const char *url) {$/;"	f
+bytes	webbench.c	/^int bytes = 0;				\/\/ 记录进程成功读取的字节数$/;"	v
+clients	webbench.c	/^int clients = 1;			\/\/ 默认客户端数量为1，只有一个并发请求$/;"	v
+failed	webbench.c	/^int failed = 0;				\/\/ 记录失败的数量$/;"	v
+force	webbench.c	/^int force = 0;				\/\/ 是否需要等待读取从server返回的数据，0表示需要等待$/;"	v
+force_reload	webbench.c	/^int force_reload = 0;			\/\/ 是否使用缓存，1表示不需要，0表示需要$/;"	v
+host	webbench.c	/^char host[MAXHOSTNAMELEN];$/;"	v
+http10	webbench.c	/^int http10 = 1; 			\/\/ http版本，0表示http0.9,1表示http1.0,2表示http1.1$/;"	v
+long_options	webbench.c	/^static const struct option long_options[] = {$/;"	v	typeref:struct:option	file:
+main	webbench.c	/^int main(int argc, char *argv[])$/;"	f
+method	webbench.c	/^int method = METHOD_GET;		\/\/ 默认请求方式是GET,也支持HEAD，OPTIONS，TRACE$/;"	v
+mypipe	webbench.c	/^int mypipe[2];				\/\/ 管道，进行父子进程间通信$/;"	v
+proxyhost	webbench.c	/^char *proxyhost = NULL;			\/\/ 服务器IP$/;"	v
+proxyport	webbench.c	/^int proxyport = 80;			\/\/ 服务器端口$/;"	v
+request	webbench.c	/^char request[REQUEST_SIZE];		\/\/ request内容$/;"	v
+speed	webbench.c	/^int speed = 0;				\/\/ 记录进程成功得到服务器响应的数量$/;"	v
+timerexpired	webbench.c	/^volatile int timerexpired = 0;		\/\/ 记录测试时间是否已经达到了设定的时间，0表示否，1表示已达到$/;"	v
+usage	webbench.c	/^static void usage(void)$/;"	f	file:
